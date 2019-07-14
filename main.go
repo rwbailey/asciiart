@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"image/jpeg"
-	"os"
 	"math"
+	"os"
+	//"github.com/fatih/color"
 )
 
 func main() {
-	pictureFile, err := os.Open("Untitled.jpg")
+	pictureFile, err := os.Open("man.jpg")
 	if err != nil {
 		fmt.Print("Error loading file")
 	}
@@ -22,13 +23,21 @@ func main() {
 	minY := picture.Bounds().Min.Y
 	maxY := picture.Bounds().Max.Y
 
+	//pr := 0.21
+	//pg := 0.72
+	//pb := 0.07
+	pr := 0.3
+	pg := 0.59
+	pb := 0.11
+
 	var imageData [][]uint8
 
 	for x := minX; x <= maxX; x++ {
 		var vals []uint8
 		for y := minY; y <= maxY; y++ {
 			r, g, b, _ := picture.At(x,y).RGBA()
-			rgb := uint8((int(r) + int(g) + int(b)) / 3)
+			rgb := uint8(pr*float64(r) + pg*float64(g) + pb*float64(b))
+			//rgb := uint8((r + g + b)/3)
 			vals = append(vals, rgb)
 		}
 		imageData = append(imageData, vals)
@@ -51,13 +60,15 @@ func main() {
 		}
 		output = append(output, pix)
 	}
-
-	for x := minX; x <= maxX; x++ {
-		for y := minY; y <= maxY; y++ {
-			fmt.Print(output[y][x])
-			fmt.Print(output[y][x])
-			fmt.Print(output[y][x])
+//color.Set(color.FgHiGreen)
+	for y := minY; y <= maxY; y++ {
+		for x := minX; x < maxX; x++ {
+			//fmt.Println(y, x)
+			fmt.Print(output[x][y])
+			fmt.Print(output[x][y])
+			fmt.Print(output[x][y])
 		}
 		fmt.Println("")
 	}
+//color.Unset()
 }
